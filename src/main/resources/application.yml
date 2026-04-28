@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /v1
+springdoc:
+  swagger-ui:
+    path: /swagger
+  api-docs:
+    path: /v1/api-docs
+
+
+environments:
+  elastic:
+    elasticPWD: "${ELASTIC_PASSWORD:14311982}"
+
