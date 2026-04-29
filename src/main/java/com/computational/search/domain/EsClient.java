@@ -25,11 +25,15 @@ import java.io.IOException;
 public class EsClient {
     private ElasticsearchClient elasticsearchClient;
 
-    public EsClient(@Value("${environments.elastic.elasticPWD}") String pwd) {
-        createConnection(pwd);
+    public EsClient(
+            @Value("${environments.elastic.elasticPWD}") String pwd,
+            @Value("${environments.elastic.host:localhost}") String host,
+            @Value("${environments.elastic.port:9200}") int port,
+            @Value("${environments.elastic.protocol:https}") String protocol) {
+        createConnection(pwd, host, port, protocol);
     }
 
-    private void createConnection(String pwd) {
+    private void createConnection(String pwd, String host, int port, String protocol) {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
         String USER = "elastic";
@@ -43,7 +47,7 @@ public class EsClient {
             .build();
 
         RestClient restClient = RestClient.builder(
-                new HttpHost("localhost", 9200, "https"))
+                new HttpHost(host, port, protocol))
             .setHttpClientConfigCallback((HttpAsyncClientBuilder httpClientBuilder) -> httpClientBuilder
                 .setDefaultCredentialsProvider(credentialsProvider)
                 .setSSLContext(sslFactory.getSslContext())

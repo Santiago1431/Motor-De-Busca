@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-04-28T11:42:22.432426373-03:00[America/Sao_Paulo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-04-29T01:56:05.344203912-03:00[America/Sao_Paulo]")
 
 @Validated
 @Api(value = "search", description = "the search API")
