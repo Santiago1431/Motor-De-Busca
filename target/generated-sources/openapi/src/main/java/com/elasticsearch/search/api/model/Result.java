@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.io.Serializable;
 import javax.validation.Valid;
@@ -13,7 +15,7 @@ import javax.validation.constraints.*;
 /**
  * Result
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-04-29T01:56:05.344203912-03:00[America/Sao_Paulo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-04-30T15:11:21.348736121-03:00[America/Sao_Paulo]")
 
 public class Result  implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -26,6 +28,14 @@ public class Result  implements Serializable {
 
   @JsonProperty("abs")
   private String abs;
+
+  @JsonProperty("formulas")
+  @Valid
+  private List<String> formulas = null;
+
+  @JsonProperty("formulas_latex")
+  @Valid
+  private List<String> formulasLatex = null;
 
   public Result title(String title) {
     this.title = title;
@@ -87,6 +97,62 @@ public class Result  implements Serializable {
     this.abs = abs;
   }
 
+  public Result formulas(List<String> formulas) {
+    this.formulas = formulas;
+    return this;
+  }
+
+  public Result addFormulasItem(String formulasItem) {
+    if (this.formulas == null) {
+      this.formulas = new ArrayList<>();
+    }
+    this.formulas.add(formulasItem);
+    return this;
+  }
+
+  /**
+   * Get formulas
+   * @return formulas
+  */
+  @ApiModelProperty(value = "")
+
+
+  public List<String> getFormulas() {
+    return formulas;
+  }
+
+  public void setFormulas(List<String> formulas) {
+    this.formulas = formulas;
+  }
+
+  public Result formulasLatex(List<String> formulasLatex) {
+    this.formulasLatex = formulasLatex;
+    return this;
+  }
+
+  public Result addFormulasLatexItem(String formulasLatexItem) {
+    if (this.formulasLatex == null) {
+      this.formulasLatex = new ArrayList<>();
+    }
+    this.formulasLatex.add(formulasLatexItem);
+    return this;
+  }
+
+  /**
+   * Get formulasLatex
+   * @return formulasLatex
+  */
+  @ApiModelProperty(value = "")
+
+
+  public List<String> getFormulasLatex() {
+    return formulasLatex;
+  }
+
+  public void setFormulasLatex(List<String> formulasLatex) {
+    this.formulasLatex = formulasLatex;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -99,12 +165,14 @@ public class Result  implements Serializable {
     Result result = (Result) o;
     return Objects.equals(this.title, result.title) &&
         Objects.equals(this.url, result.url) &&
-        Objects.equals(this.abs, result.abs);
+        Objects.equals(this.abs, result.abs) &&
+        Objects.equals(this.formulas, result.formulas) &&
+        Objects.equals(this.formulasLatex, result.formulasLatex);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(title, url, abs);
+    return Objects.hash(title, url, abs, formulas, formulasLatex);
   }
 
   @Override
@@ -115,6 +183,8 @@ public class Result  implements Serializable {
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    url: ").append(toIndentedString(url)).append("\n");
     sb.append("    abs: ").append(toIndentedString(abs)).append("\n");
+    sb.append("    formulas: ").append(toIndentedString(formulas)).append("\n");
+    sb.append("    formulasLatex: ").append(toIndentedString(formulasLatex)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -22,11 +22,19 @@ public class SearchService {
         var searchResponse = esClient.search(query, page);
         List<Hit<ObjectNode>> hits = searchResponse.hits().hits();
 
-        var resultsList = hits.stream().map(h ->
-                new Result()
-                        .abs(treatContent(h.source().get("content").asText()))
-                        .title(h.source().get("title").asText())
-                        .url(h.source().get("url").asText())
+        var resultsList = hits.stream().map(h -> {
+                    Result r = new Result()
+                            .abs(treatContent(h.source().get("content").asText()))
+                            .title(h.source().get("title").asText())
+                            .url(h.source().get("url").asText());
+
+                    if (h.source().has("formulas_latex")) {
+                        java.util.List<String> formulas = new java.util.ArrayList<>();
+                        h.source().get("formulas_latex").forEach(node -> formulas.add(node.asText()));
+                        r.setFormulasLatex(formulas);
+                    }
+                    return r;
+                }
         ).collect(Collectors.toList());
 
         return resultsList;

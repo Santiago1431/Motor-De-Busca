@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-04-29T01:56:05.344203912-03:00[America/Sao_Paulo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-04-30T15:11:21.348736121-03:00[America/Sao_Paulo]")
 
 @Validated
 @Api(value = "search", description = "the search API")
@@ -59,7 +59,7 @@ public interface SearchApi {
             getRequest().ifPresent(request -> {
                 for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                     if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                        String exampleString = "{ \"abs\" : \"abs\", \"title\" : \"title\", \"url\" : \"url\" }";
+                        String exampleString = "{ \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" }";
                         ApiUtil.setExampleResponse(request, "application/json", exampleString);
                         break;
                     }

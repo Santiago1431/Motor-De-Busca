@@ -30,7 +30,7 @@
 
         <openapi-spec.file>${project.basedir}/src/main/resources/api.yml</openapi-spec.file>
         <openapi-spec.classpath>classpath:api.yml</openapi-spec.classpath>
-        <api.path>com.elasticsearch.search</api.path>
+        <api.path>com.computational.search</api.path>
     </properties>
     <dependencies>
         <!-- Spring Boot -->
@@ -109,6 +109,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson-databind.version}</version>
+        </dependency>
+
+        <!-- Spring Data Elasticsearch for annotations -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
     </dependencies>
 
