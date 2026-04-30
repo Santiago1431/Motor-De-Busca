@@ -2,11 +2,15 @@ server:
   port: 8080
   servlet:
     context-path: /v1
+  tomcat:
+    relaxed-query-chars: "{,},\\,|,^,[,],<,>"
+    relaxed-path-chars: "{,},\\,|,^,[,],<,>"
 springdoc:
   swagger-ui:
     path: /swagger
   api-docs:
     path: /v1/api-docs
+  
 
 
 environments:
@@ -15,3 +19,6 @@ environments:
     host: "${ES_HOST:localhost}"
     port: "${ES_PORT:9200}"
     protocol: "${ES_PROTOCOL:https}"
+
+
+

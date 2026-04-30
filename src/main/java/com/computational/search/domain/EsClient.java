@@ -1,7 +1,6 @@
 package com.computational.search.domain;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
@@ -65,13 +64,20 @@ public class EsClient {
     public SearchResponse search(String query, Integer page) {
         int pageSize = 10;
         int from = ((page != null ? page : 1) - 1) * pageSize;
-        Query matchQuery = MatchQuery.of(q -> q.field("content").query(query))._toQuery();
+
+        
+        Query multiMatchQuery = Query.of(q -> q
+                .multiMatch(m -> m
+                        .fields("content", "title", "formulas_latex")
+                        .query(query)
+                )
+        );
 
         SearchResponse<ObjectNode> response;
         try {
             response = elasticsearchClient.search(s -> s
                 .index("wikipedia").from(from).size(pageSize)
-                .query(matchQuery), ObjectNode.class
+                .query(multiMatchQuery), ObjectNode.class
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

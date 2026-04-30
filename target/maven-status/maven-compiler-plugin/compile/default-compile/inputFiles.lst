@@ -1,6 +1,7 @@
 /home/santiago/Motor-De-Busca/src/main/java/com/computational/search/SearchApplication.java
 /home/santiago/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/computational/search/api/facade/SearchApi.java
 /home/santiago/Motor-De-Busca/src/main/java/com/computational/search/service/SearchService.java
+/home/santiago/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/computational/search/api/model/SearchResponse.java
 /home/santiago/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/elasticsearch/search/api/model/Error.java
 /home/santiago/Motor-De-Busca/src/main/java/com/computational/search/domain/EsClient.java
 /home/santiago/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/elasticsearch/search/api/model/Result.java

@@ -6,7 +6,7 @@
 package com.computational.search.api.facade;
 
 import com.computational.search.api.model.Error;
-import com.computational.search.api.model.Result;
+import com.computational.search.api.model.SearchResponse;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-04-30T15:26:41.677174241-03:00[America/Sao_Paulo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-04-30T17:43:17.295258789-03:00[America/Sao_Paulo]")
 
 @Validated
 @Api(value = "search", description = "the search API")
@@ -47,19 +47,19 @@ public interface SearchApi {
      * @return OK (status code 200)
      *         or Unexpected error (status code 500)
      */
-    @ApiOperation(value = "Submits a query to Elasticsearch", nickname = "search", notes = "", response = Result.class, responseContainer = "List", tags={ "search", })
+    @ApiOperation(value = "Submits a query to Elasticsearch", nickname = "search", notes = "", response = SearchResponse.class, tags={ "search", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Result.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "OK", response = SearchResponse.class),
         @ApiResponse(code = 500, message = "Unexpected error", response = Error.class) })
     @RequestMapping(value = "/search",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    default CompletableFuture<ResponseEntity<List<Result>>> search(@ApiParam(value = "Query to be submitted") @Valid @RequestParam(value = "query", required = false) String query,@ApiParam(value = "Page number of results", defaultValue = "1") @Valid @RequestParam(value = "page", required = false, defaultValue="1") Integer page) {
+    default CompletableFuture<ResponseEntity<SearchResponse>> search(@ApiParam(value = "Query to be submitted") @Valid @RequestParam(value = "query", required = false) String query,@ApiParam(value = "Page number of results", defaultValue = "1") @Valid @RequestParam(value = "page", required = false, defaultValue="1") Integer page) {
         return CompletableFuture.supplyAsync(()-> {
             getRequest().ifPresent(request -> {
                 for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                     if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                        String exampleString = "{ \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" }";
+                        String exampleString = "{ \"totalPages\" : 0, \"results\" : [ { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" }, { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" } ] }";
                         ApiUtil.setExampleResponse(request, "application/json", exampleString);
                         break;
                     }

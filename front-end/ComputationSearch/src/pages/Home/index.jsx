@@ -3,6 +3,8 @@ import FindIcon from "../../assets/iconFind.png"
 import api from "../../services/api.js"
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import 'katex/dist/katex.min.css'
+import { InlineMath } from 'react-katex'
 
 
 function Home() {
@@ -24,7 +26,7 @@ function Home() {
           page: 1
         }
       });
-      navigate('/result-links',{state: {results: response.data}});
+      navigate('/result-links',{state: {results: response.data, query: query}});
     } catch (error) {
       console.log(error);
     }finally {
@@ -35,17 +37,24 @@ function Home() {
   return (
     <div className='container'>
       <h1 className='title'>Computation Search</h1>
-      <form className='search-form' onSubmit={handleSearch}>
-        <input name='computational-query'
-          type='text'
-          placeholder='Faça sua busca computacional'
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button className='icon-find' type='submit'>
-          <img src={FindIcon} alt="Find Icon" />
-        </button>
-      </form>
+      <div className='search-container-home'>
+        <form className='search-form' onSubmit={handleSearch}>
+          <input name='computational-query'
+            type='text'
+            placeholder='Faça sua busca computacional'
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <button className='icon-find' type='submit'>
+            <img src={FindIcon} alt="Find Icon" />
+          </button>
+        </form>
+        {query && (query.includes('\\') || query.includes('_') || query.includes('^')) && (
+          <div className='latex-preview-home'>
+            <InlineMath math={query} />
+          </div>
+        )}
+      </div>
     </div>
   )
 }
