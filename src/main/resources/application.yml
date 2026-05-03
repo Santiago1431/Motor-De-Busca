@@ -10,8 +10,6 @@ springdoc:
     path: /swagger
   api-docs:
     path: /v1/api-docs
-  
-
 
 environments:
   elastic:
@@ -19,6 +17,12 @@ environments:
     host: "${ES_HOST:localhost}"
     port: "${ES_PORT:9200}"
     protocol: "${ES_PROTOCOL:https}"
-
-
+spring:
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: llama3.1:8b
+        options:
+          temperature: 0.0
 

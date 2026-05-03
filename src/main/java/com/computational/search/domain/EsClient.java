@@ -38,47 +38,62 @@ public class EsClient {
         String USER = "elastic";
 
         credentialsProvider.setCredentials(AuthScope.ANY,
-            new UsernamePasswordCredentials(USER, pwd));
+                new UsernamePasswordCredentials(USER, pwd));
 
         SSLFactory sslFactory = SSLFactory.builder()
-            .withUnsafeTrustMaterial()
-            .withUnsafeHostnameVerifier()
-            .build();
+                .withUnsafeTrustMaterial()
+                .withUnsafeHostnameVerifier()
+                .build();
 
         RestClient restClient = RestClient.builder(
                 new HttpHost(host, port, protocol))
-            .setHttpClientConfigCallback((HttpAsyncClientBuilder httpClientBuilder) -> httpClientBuilder
-                .setDefaultCredentialsProvider(credentialsProvider)
-                .setSSLContext(sslFactory.getSslContext())
-                .setSSLHostnameVerifier(sslFactory.getHostnameVerifier())
-            ).build();
+                .setHttpClientConfigCallback((HttpAsyncClientBuilder httpClientBuilder) -> httpClientBuilder
+                        .setDefaultCredentialsProvider(credentialsProvider)
+                        .setSSLContext(sslFactory.getSslContext())
+                        .setSSLHostnameVerifier(sslFactory.getHostnameVerifier()))
+                .build();
 
         ElasticsearchTransport transport = new RestClientTransport(
-            restClient,
-            new JacksonJsonpMapper()
-        );
+                restClient,
+                new JacksonJsonpMapper());
 
         elasticsearchClient = new co.elastic.clients.elasticsearch.ElasticsearchClient(transport);
     }
 
-    public SearchResponse search(String query, Integer page) {
+    public SearchResponse search(String query, String identifiedName, Integer page) {
         int pageSize = 10;
         int from = ((page != null ? page : 1) - 1) * pageSize;
 
-        
         Query multiMatchQuery = Query.of(q -> q
-                .multiMatch(m -> m
-                        .fields("content", "title", "formulas_latex")
-                        .query(query)
+                .bool(b -> b
+                        .must(m -> m
+                                .multiMatch(mm -> mm
+                                        .fields("formulas_latex", "content")
+                                        .query(query)
+                                )
+                        )
+                        .should(s -> s
+                                .match(ma -> ma
+                                        .field("title")
+                                        .query(identifiedName)
+                                        .boost(10f)
+                                )
+                        )
+                        .should(s -> s
+                                .match(ma -> ma
+                                        .field("content")
+                                        .query(identifiedName)
+                                        .boost(5f)
+                                )
+                        )
                 )
         );
 
         SearchResponse<ObjectNode> response;
         try {
             response = elasticsearchClient.search(s -> s
-                .index("wikipedia").from(from).size(pageSize)
-                .query(multiMatchQuery), ObjectNode.class
-            );
+                    .index("wikipedia").from(from).size(pageSize)
+                    .query(multiMatchQuery), ObjectNode.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

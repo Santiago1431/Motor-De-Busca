@@ -19,8 +19,8 @@ public class SearchService {
         this.esClient = esClient;
     }
 
-    public com.computational.search.api.model.SearchResponse submitQuery(String query, Integer page) {
-        var searchResponse = esClient.search(query, page);
+    public com.computational.search.api.model.SearchResponse submitQuery(String query, String identifiedName, Integer page) {
+        var searchResponse = esClient.search(query, identifiedName, page);
         List<Hit<ObjectNode>> hits = searchResponse.hits().hits();
         long totalHits = searchResponse.hits().total().value();
         int pageSize = 10;
