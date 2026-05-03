@@ -6,6 +6,7 @@
 package com.computational.search.api.facade;
 
 import com.computational.search.api.model.Error;
+import org.springframework.core.io.Resource;
 import com.computational.search.api.model.SearchResponse;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-05-03T02:58:27.571621868-03:00[America/Sao_Paulo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-05-03T05:15:08.689786352-03:00[America/Sao_Paulo]")
 
 @Validated
 @Api(value = "search", description = "the search API")
@@ -55,6 +56,38 @@ public interface SearchApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     default CompletableFuture<ResponseEntity<SearchResponse>> search(@ApiParam(value = "Query to be submitted") @Valid @RequestParam(value = "query", required = false) String query,@ApiParam(value = "Page number of results", defaultValue = "1") @Valid @RequestParam(value = "page", required = false, defaultValue="1") Integer page) {
+        return CompletableFuture.supplyAsync(()-> {
+            getRequest().ifPresent(request -> {
+                for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                    if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                        String exampleString = "{ \"totalPages\" : 0, \"results\" : [ { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" }, { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" } ] }";
+                        ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                        break;
+                    }
+                }
+            });
+            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        }, Runnable::run);
+
+    }
+
+
+    /**
+     * POST /search/image : Submits an image to identify a formula and search
+     *
+     * @param file  (optional)
+     * @return OK (status code 200)
+     *         or Unexpected error (status code 500)
+     */
+    @ApiOperation(value = "Submits an image to identify a formula and search", nickname = "searchByImage", notes = "", response = SearchResponse.class, tags={ "search", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = SearchResponse.class),
+        @ApiResponse(code = 500, message = "Unexpected error", response = Error.class) })
+    @RequestMapping(value = "/search/image",
+        produces = { "application/json" }, 
+        consumes = { "multipart/form-data" },
+        method = RequestMethod.POST)
+    default CompletableFuture<ResponseEntity<SearchResponse>> searchByImage(@ApiParam(value = "") @Valid @RequestPart(value = "file") MultipartFile file) {
         return CompletableFuture.supplyAsync(()-> {
             getRequest().ifPresent(request -> {
                 for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {

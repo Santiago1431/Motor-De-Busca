@@ -1,11 +1,14 @@
 /home/santiago/aaa/Motor-De-Busca/src/main/java/com/computational/search/SearchApplication.java
+/home/santiago/aaa/Motor-De-Busca/src/main/java/com/computational/search/config/AiConfig.java
 /home/santiago/aaa/Motor-De-Busca/src/main/java/com/computational/search/controller/SearchController.java
 /home/santiago/aaa/Motor-De-Busca/src/main/java/com/computational/search/domain/EsClient.java
 /home/santiago/aaa/Motor-De-Busca/src/main/java/com/computational/search/domain/WikipediaDocument.java
+/home/santiago/aaa/Motor-De-Busca/src/main/java/com/computational/search/service/ExtractTextService.java
 /home/santiago/aaa/Motor-De-Busca/src/main/java/com/computational/search/service/LlmService.java
 /home/santiago/aaa/Motor-De-Busca/src/main/java/com/computational/search/service/SearchService.java
 /home/santiago/aaa/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/computational/search/api/facade/ApiUtil.java
 /home/santiago/aaa/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/computational/search/api/facade/SearchApi.java
 /home/santiago/aaa/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/computational/search/api/model/Error.java
+/home/santiago/aaa/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/computational/search/api/model/InlineObject.java
 /home/santiago/aaa/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/computational/search/api/model/Result.java
 /home/santiago/aaa/Motor-De-Busca/target/generated-sources/openapi/src/main/java/com/computational/search/api/model/SearchResponse.java

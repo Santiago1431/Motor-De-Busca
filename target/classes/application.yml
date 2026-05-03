@@ -32,3 +32,6 @@ spring:
           num_predict: 32 # Limita a resposta para ser curta e rápida
           num_ctx: 1024   # Reduz consumo de memória
 
+ocr:
+  service:
+    url: "http://localhost:8001/predict"

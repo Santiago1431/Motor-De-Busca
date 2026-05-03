@@ -1,10 +1,5 @@
 com/computational/search/SearchApplication.class
-com/computational/search/api/facade/ApiUtil.class
-com/computational/search/api/model/SearchResponse.class
-com/computational/search/api/model/Error.class
 com/computational/search/domain/EsClient.class
-com/computational/search/service/SearchService.class
-com/computational/search/api/facade/SearchApi.class
+com/computational/search/service/LlmService.class
 com/computational/search/domain/WikipediaDocument.class
-com/computational/search/api/model/Result.class
-com/computational/search/controller/SearchController.class
+com/computational/search/service/ExtractTextService.class
