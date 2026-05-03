@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import api from '../../services/api'
 import FindIcon from "../../assets/iconFind.png"
+import CameraIcon from "../../assets/cameraIcon.png"
 import 'katex/dist/katex.min.css'
 import { InlineMath, BlockMath } from 'react-katex'
 
@@ -10,6 +11,7 @@ function ResultLinks() {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const fileInputRef = useRef(null);
     const [results, setResults] = useState(location.state?.results?.results || []);
     const [totalPages, setTotalPages] = useState(location.state?.results?.totalPages || 1);
     const [query, setQuery] = useState(location.state?.query || '');
@@ -52,6 +54,37 @@ function ResultLinks() {
         } else {
             setPage(1); // Isso disparará o useEffect que chama handleFetchResults(1)
         }
+    }
+
+    const handleImageSearch = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            setLoading(true);
+            const response = await api.post('/searchByImage', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setResults(response.data.results || []);
+            setTotalPages(response.data.totalPages || 1);
+            setQuery("Busca por Imagem (LaTeX)");
+            setPage(1);
+            window.scrollTo(0, 0);
+        } catch (error) {
+            console.error("Erro na busca por imagem:", error);
+            alert("Falha ao processar imagem.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const triggerFileInput = () => {
+        fileInputRef.current.click();
     }
 
     async function handleNextPage() {
@@ -115,9 +148,21 @@ function ResultLinks() {
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                         />
-                        <button className='icon-find' type='submit'>
-                            <img src={FindIcon} alt="Find Icon" />
-                        </button>
+                        <div className='header-button-group'>
+                            <button className='icon-camera-header' type='button' onClick={triggerFileInput} title="Buscar por Imagem">
+                                <img src={CameraIcon} alt="Camera Icon" />
+                            </button>
+                            <button className='icon-find' type='submit'>
+                                <img src={FindIcon} alt="Find Icon" />
+                            </button>
+                        </div>
+                        <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            style={{ display: 'none' }} 
+                            accept="image/*"
+                            onChange={handleImageSearch}
+                        />
                     </form>
                     {isLatex(query) && (
                         <div className='latex-preview'>
