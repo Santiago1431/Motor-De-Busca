@@ -1,6 +1,7 @@
 package com.computational.search.domain;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
@@ -65,35 +66,45 @@ public class EsClient {
         int from = ((page != null ? page : 1) - 1) * pageSize;
 
         Query multiMatchQuery = Query.of(q -> q
-                .bool(b -> b
-                        .must(m -> m
-                                .multiMatch(mm -> mm
-                                        .fields("formulas_latex", "content")
-                                        .query(query)
-                                )
+                .bool(b -> {
+                    b.must(m -> m
+                        .multiMatch(mm -> mm
+                            .fields("formulas_latex", "content")
+                            .query(query)
+                            .boost(30f)
                         )
-                        .should(s -> s
-                                .match(ma -> ma
-                                        .field("title")
-                                        .query(identifiedName)
-                                        .boost(10f)
-                                )
-                        )
-                        .should(s -> s
-                                .match(ma -> ma
-                                        .field("content")
-                                        .query(identifiedName)
-                                        .boost(5f)
-                                )
-                        )
-                )
+                    );
+
+                    if (identifiedName != null && !identifiedName.trim().isEmpty()) {
+                        b.should(s -> s
+                            .match(ma -> ma
+                                .field("title")
+                                .query(identifiedName)
+                                .operator(Operator.And) // Exige todas as palavras no título
+                                .boost(100f)
+                            )
+                        );
+                        b.should(s -> s
+                            .match(ma -> ma
+                                .field("content")
+                                .query(identifiedName)
+                                .boost(50f)
+                            )
+                        );
+                    }
+                    return b;
+                })
         );
 
         SearchResponse<ObjectNode> response;
         try {
             response = elasticsearchClient.search(s -> s
-                    .index("wikipedia").from(from).size(pageSize)
-                    .query(multiMatchQuery), ObjectNode.class);
+                    .index("wikipedia")
+                    .from(from)
+                    .size(pageSize)
+                    .query(multiMatchQuery)
+                    .collapse(c -> c.field("url.keyword")), // Agrupa por url para evitar duplicatas
+                ObjectNode.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

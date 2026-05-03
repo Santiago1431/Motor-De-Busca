@@ -25,8 +25,12 @@ public class SearchController implements SearchApi {
 
     @Override
     public CompletableFuture<ResponseEntity<SearchResponse>> search(String query, Integer page) {
-        return CompletableFuture.supplyAsync(() -> {
-            String latexName = llmService.llmProcess(query);
+        // Inicia o processamento da LLM em paralelo com um timeout rigoroso
+        CompletableFuture<String> llmFuture = CompletableFuture.supplyAsync(() -> llmService.llmProcess(query))
+                .completeOnTimeout(null, 1500, java.util.concurrent.TimeUnit.MILLISECONDS) // Máximo 1.5s
+                .exceptionally(ex -> null); // Se der erro, ignora e segue
+
+        return llmFuture.thenApply(latexName -> {
             var result = searchService.submitQuery(query, latexName, page);
             return ResponseEntity.ok(result);
         });

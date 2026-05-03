@@ -28,14 +28,16 @@ function ResultLinks() {
     async function handleFetchResults(targetPage = page) {
         try {
             setLoading(true);
+            setResults([]); // Limpa os resultados atuais para mostrar o loading de forma limpa
             const response = await api.get(`/search`, {
                 params: {
                     query: query,
                     page: targetPage
                 }
             });
-            setResults(response.data.results);
-            setTotalPages(response.data.totalPages);
+            setResults(response.data.results || []);
+            setTotalPages(response.data.totalPages || 1);
+            window.scrollTo(0, 0); // Volta para o topo da página
         } catch (error) {
             console.log(error);
         } finally {
@@ -48,7 +50,7 @@ function ResultLinks() {
         if (page === 1) {
             handleFetchResults(1);
         } else {
-            setPage(1);
+            setPage(1); // Isso disparará o useEffect que chama handleFetchResults(1)
         }
     }
 
@@ -127,24 +129,32 @@ function ResultLinks() {
             
             <div className='container-links'>
         
-                {results.map(links => (
-                    <div className='links-results' key={links.url}>
-                        <button type='button' className='button-title' onClick={() => window.open(links.url, '_blank')}><h3 className='title'>{links.title}</h3></button>
-                        <p className='description'>
-                            <LatexRenderer text={links.abs} />
-                        </p>
-                        {links.formulasLatex && links.formulasLatex.length > 0 && (
-                            <div className='formulas-container'>
-                                {links.formulasLatex.map((formula, index) => (
-                                    <div key={index} className='formula-item'>
-                                        <InlineMath math={formula} />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                ))}
-            {loading && <p className='loading-text'>Carregando...</p>}
+                {results.length > 0 ? (
+                    results.map((links, index) => (
+                        <div className='links-results' key={`${links.url}-${index}`}>
+                            <button type='button' className='button-title' onClick={() => window.open(links.url, '_blank')}>
+                                <h3 className='title'>{links.title}</h3>
+                            </button>
+                            <p className='description'>
+                                <LatexRenderer text={links.abs} />
+                            </p>
+                            {links.formulasLatex && links.formulasLatex.length > 0 && (
+                                <div className='formulas-container'>
+                                    {links.formulasLatex.map((formula, fIndex) => (
+                                        formula && formula.trim() && (
+                                            <div key={fIndex} className='formula-item'>
+                                                <InlineMath math={formula} />
+                                            </div>
+                                        )
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    !loading && <p className='no-results'>Nenhum resultado encontrado.</p>
+                )}
+                {loading && <p className='loading-text'>Carregando...</p>}
             <div className='page-navigation'>
                 <button onClick={handlePreviousPage} disabled={page === 1}>Anterior</button>
                 {getPageRange().map(p => (

@@ -1,62 +1,107 @@
-# Elasticsearch Search API
+# 🚀 Computation Search - Motor de Busca Inteligente
 
-Este é um projeto exemplo de uma aplicação Spring Boot que utiliza o **Elasticsearch Java API Client** para realizar buscas em um índice do Elasticsearch. A API é definida utilizando o padrão OpenAPI (Swagger).
+Este projeto é um motor de busca avançado que combina a robustez do **Elasticsearch** com a inteligência de **LLMs (Ollama)** para identificar e priorizar fórmulas matemáticas e conteúdos computacionais.
 
-## 🚀 Tecnologias Utilizadas
+## 🌟 Funcionalidades Principais
 
-*   **Java 17**
-*   **Spring Boot 3.1.0**
-*   **Elasticsearch Java Client 8.8.0**
-*   **OpenAPI Generator** (para geração de interfaces e modelos a partir do `api.yml`)
-*   **Maven**
+*   **Busca Inteligente com LLM:** Identifica automaticamente nomes comuns de fórmulas LaTeX (ex: ao buscar uma fórmula, o LLM identifica como "Teorema de Pitágoras") e usa essa informação para dar boost nos resultados.
+*   **Otimização de Latência:**
+    *   **Cache com Caffeine:** Consultas repetidas ao LLM são cacheadas em memória para resposta instantânea.
+    *   **Execução Paralela:** O backend processa o LLM e a busca básica em paralelo com um timeout rigoroso de 1.5s para garantir que o usuário nunca fique esperando.
+*   **Filtro de Duplicatas:** Uso de `Collapse` no Elasticsearch para garantir que apenas uma página por URL seja exibida nos resultados.
+*   **Ranking Avançado:** Pesos customizados para títulos (100f) com correspondência estrita (`AND`) e conteúdo (50f).
+*   **Renderização Matemática:** Frontend integrado com **KaTeX** para exibir fórmulas LaTeX de forma elegante.
 
-## 📋 Pré-requisitos
+## 🏗️ Arquitetura
 
-*   JDK 17 instalado.
-*   Instância do Elasticsearch rodando localmente (padrão esperado: `https://localhost:9200`).
-*   Índice chamado `wikipedia` criado no Elasticsearch com o campo `content`.
+### Backend (Spring Boot)
+*   **Java 21** & **Spring Boot 3.5.14**
+*   **Elasticsearch Java Client 8.11.1**
+*   **Spring AI (Ollama):** Integração com Llama 3.1 para processamento de linguagem natural.
+*   **Caffeine Cache:** Gerenciamento de cache em memória.
 
-## 🛠️ Configuração do Elasticsearch
+### Frontend (React)
+*   **Vite** & **React 18**
+*   **KaTeX:** Renderização de alta performance para matemática.
+*   **React Router Dom:** Gerenciamento de rotas e estados de navegação.
 
-A conexão com o Elasticsearch é configurada na classe `EsClient.java`. Atualmente, ela está configurada para:
-*   **Host:** `https://localhost:9200`
-*   **Usuário:** `elastic`
-*   **Senha:** `user123`
-*   **SSL:** Configurado para ignorar certificados não confiáveis (apenas para ambiente de desenvolvimento).
+## 🛠️ Configuração
 
-## 📂 Estrutura da API
+### Pré-requisitos
+1.  **Ollama** instalado e rodando o modelo `llama3.1:8b`.
+2.  **Elasticsearch 8.x** com o índice `wikipedia` populado.
+3.  **Node.js** para o frontend.
 
-A definição da API está localizada em `src/main/resources/api.yml`.
-
-### Endpoint de Busca
-`GET /search`
-
-**Parâmetros:**
-*   `query` (string, obrigatório): O termo de busca a ser enviado ao campo `content` do Elasticsearch.
-*   `page` (integer, opcional): O número da página de resultados (padrão: `1`).
-
-**Exemplo de uso:**
-```bash
-curl "http://localhost:8080/search?query=computador&page=1"
+### Variáveis de Ambiente
+O projeto utiliza as seguintes chaves no `application.yml`:
+```yaml
+environments:
+  elastic:
+    elasticPWD: seu_password
+    host: localhost
+    port: 9200
 ```
 
-## ⚙️ Como Executar
+## 🚀 Como Executar
 
-1.  Compile o projeto para gerar as classes a partir do OpenAPI:
-    ```bash
-    ./mvnw compile
-    ```
+### Backend
+```bash
+mvn spring-boot:run
+```
 
-2.  Execute a aplicação:
-    ```bash
-    ./mvnw spring-boot:run
-    ```
+### Frontend
+```bash
+cd front-end/ComputationSearch
+npm install
+npm run dev
+```
 
-A aplicação estará disponível em `http://localhost:8080`.
+## 🔍 Query no Kibana DevTools
 
-## 📝 Detalhes da Implementação
+Para testar o comportamento da busca diretamente no Kibana, a estrutura da query gerada pelo backend é equivalente a esta:
 
-*   **Geração de Código:** O plugin `openapi-generator-maven-plugin` gera a interface `SearchApi` e o modelo `Result` automaticamente.
-*   **Controlador:** `SearchController` implementa a interface gerada e delega a lógica para o `SearchService`.
-*   **Serviço:** `SearchService` processa os resultados do Elasticsearch e limpa o conteúdo (removendo tags HTML e caracteres especiais).
-*   **Paginação:** O cálculo do offset (`from`) é feito no `EsClient` seguindo a fórmula `(page - 1) * 10`.
+```json
+GET /wikipedia/_search
+{
+  "from": 0,
+  "size": 10,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "multi_match": {
+            "fields": ["formulas_latex", "content"],
+            "query": "termo_da_busca",
+            "boost": 30
+          }
+        }
+      ],
+      "should": [
+        {
+          "match": {
+            "title": {
+              "query": "nome_identificado_pela_llm",
+              "operator": "and",
+              "boost": 100
+            }
+          }
+        },
+        {
+          "match": {
+            "content": {
+              "query": "nome_identificado_pela_llm",
+              "boost": 50
+            }
+          }
+        }
+      ]
+    }
+  },
+  "collapse": {
+    "field": "url.keyword"
+  }
+}
+```
+
+---
+Desenvolvido para fins de pesquisa e busca computacional avançada.

@@ -18,6 +18,10 @@ environments:
     port: "${ES_PORT:9200}"
     protocol: "${ES_PROTOCOL:https}"
 spring:
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=24h
   ai:
     ollama:
       base-url: http://localhost:11434
@@ -25,4 +29,6 @@ spring:
         model: llama3.1:8b
         options:
           temperature: 0.0
+          num_predict: 32 # Limita a resposta para ser curta e rápida
+          num_ctx: 1024   # Reduz consumo de memória
 

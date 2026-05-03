@@ -2,6 +2,7 @@ package com.computational.search.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -14,7 +15,11 @@ public class LlmService {
         this.model = model;
     }
 
+    @Cacheable(value = "llmCache", key = "#latex")
     public String llmProcess(String latex) {
+        if (latex == null || latex.trim().isEmpty()) {
+            return latex;
+        }
         // Prompt extremamente direto para forçar a LLM a não ser prolixa
         String prompt = "SYSTEM: You are a mathematical identifier. Output ONLY the name of the formula. No steps, no reasoning, no chat.\n" +
                         "USER: Identify the common name of this LaTeX formula in English: " + latex + "\n" +
