@@ -44,15 +44,11 @@ function Home() {
 
     try {
       setLoading(true);
-      const response = await api.post('/searchByImage', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await api.post('/search/image', formData);
       navigate('/result-links', { 
         state: { 
           results: response.data, 
-          query: "Busca por Imagem (LaTeX)" 
+          query: response.data.query || "Busca por Imagem (LaTeX)" 
         } 
       });
     } catch (error) {

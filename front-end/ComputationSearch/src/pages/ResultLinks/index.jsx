@@ -65,14 +65,10 @@ function ResultLinks() {
 
         try {
             setLoading(true);
-            const response = await api.post('/searchByImage', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+            const response = await api.post('/search/image', formData);
             setResults(response.data.results || []);
             setTotalPages(response.data.totalPages || 1);
-            setQuery("Busca por Imagem (LaTeX)");
+            setQuery(response.data.query || "Busca por Imagem (LaTeX)");
             setPage(1);
             window.scrollTo(0, 0);
         } catch (error) {

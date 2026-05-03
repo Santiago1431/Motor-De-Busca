@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-05-03T05:15:08.689786352-03:00[America/Sao_Paulo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-05-03T05:37:02.070740201-03:00[America/Sao_Paulo]")
 
 @Validated
 @Api(value = "search", description = "the search API")
@@ -60,7 +60,7 @@ public interface SearchApi {
             getRequest().ifPresent(request -> {
                 for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                     if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                        String exampleString = "{ \"totalPages\" : 0, \"results\" : [ { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" }, { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" } ] }";
+                        String exampleString = "{ \"query\" : \"query\", \"totalPages\" : 0, \"results\" : [ { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" }, { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" } ] }";
                         ApiUtil.setExampleResponse(request, "application/json", exampleString);
                         break;
                     }
@@ -92,7 +92,7 @@ public interface SearchApi {
             getRequest().ifPresent(request -> {
                 for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                     if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                        String exampleString = "{ \"totalPages\" : 0, \"results\" : [ { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" }, { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" } ] }";
+                        String exampleString = "{ \"query\" : \"query\", \"totalPages\" : 0, \"results\" : [ { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" }, { \"abs\" : \"abs\", \"formulas_latex\" : [ \"formulas_latex\", \"formulas_latex\" ], \"formulas\" : [ \"formulas\", \"formulas\" ], \"title\" : \"title\", \"url\" : \"url\" } ] }";
                         ApiUtil.setExampleResponse(request, "application/json", exampleString);
                         break;
                     }

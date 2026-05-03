@@ -55,10 +55,21 @@ public class SearchController implements SearchApi {
                 String latex = extractTextService.extractTextFromImage(file);
                 log.info("LaTeX extraído: " + latex);
                 
-                // 2. Identifica o nome da fórmula (via Ollama/Cache)
-                String identifiedName = llmService.llmProcess(latex);
+                if (latex == null || latex.trim().isEmpty()) {
+                    return ResponseEntity.ok(new SearchResponse());
+                }
+
+                // 2. Tenta identificar o nome da fórmula com timeout (máximo 5s para imagem)
+                String finalLatex = latex;
+                String identifiedName = null;
+                try {
+                    identifiedName = CompletableFuture.supplyAsync(() -> llmService.llmProcess(finalLatex))
+                        .get(5, TimeUnit.SECONDS);
+                } catch (Exception e) {
+                    log.warn("Falha ou timeout ao identificar nome da fórmula pela LLM: " + e.getMessage());
+                }
                 
-                // 3. Realiza a busca no Elasticsearch
+                // 3. Realiza a busca no Elasticsearch (usa o nome se identificado, ou apenas o latex)
                 var result = searchService.submitQuery(latex, identifiedName, 1);
                 
                 return ResponseEntity.ok(result);
@@ -66,7 +77,7 @@ public class SearchController implements SearchApi {
                 log.error("Erro ao processar imagem", e);
                 throw new RuntimeException("Falha ao ler o arquivo de imagem enviado.");
             }
-        }).orTimeout(60, TimeUnit.SECONDS); // LLaVA local pode demorar um pouco mais
+        }).orTimeout(60, TimeUnit.SECONDS);
     }
 
     @GetMapping("/chat")

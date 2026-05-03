@@ -43,6 +43,7 @@ public class SearchService {
 
         return new SearchResponse()
                 .results(resultsList)
+                .query(query)
                 .totalPages(totalPages);
     }
 

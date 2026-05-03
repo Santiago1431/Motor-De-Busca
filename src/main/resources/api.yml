@@ -71,6 +71,8 @@ components:
       properties:
         totalPages:
           type: integer
+        query:
+          type: string
         results:
           type: array
           items:

@@ -16,3 +16,16 @@ INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
 INFO:     127.0.0.1:33874 - "POST /predict HTTP/1.1" 200 OK
 INFO:     127.0.0.1:43792 - "POST /predict HTTP/1.1" 200 OK
 INFO:     127.0.0.1:39992 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51874 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47726 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44998 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35424 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36862 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39864 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43558 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34208 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54292 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36850 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48168 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39718 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35004 - "POST /predict HTTP/1.1" 200 OK

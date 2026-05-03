@@ -14,7 +14,7 @@ import javax.validation.constraints.*;
 /**
  * InlineObject
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-05-03T05:15:08.689786352-03:00[America/Sao_Paulo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-05-03T05:37:02.070740201-03:00[America/Sao_Paulo]")
 
 public class InlineObject  implements Serializable {
   private static final long serialVersionUID = 1L;

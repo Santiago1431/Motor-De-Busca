@@ -16,13 +16,16 @@ import javax.validation.constraints.*;
 /**
  * SearchResponse
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-05-03T05:15:08.689786352-03:00[America/Sao_Paulo]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-05-03T05:37:02.070740201-03:00[America/Sao_Paulo]")
 
 public class SearchResponse  implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @JsonProperty("totalPages")
   private Integer totalPages;
+
+  @JsonProperty("query")
+  private String query;
 
   @JsonProperty("results")
   @Valid
@@ -46,6 +49,26 @@ public class SearchResponse  implements Serializable {
 
   public void setTotalPages(Integer totalPages) {
     this.totalPages = totalPages;
+  }
+
+  public SearchResponse query(String query) {
+    this.query = query;
+    return this;
+  }
+
+  /**
+   * Get query
+   * @return query
+  */
+  @ApiModelProperty(value = "")
+
+
+  public String getQuery() {
+    return query;
+  }
+
+  public void setQuery(String query) {
+    this.query = query;
   }
 
   public SearchResponse results(List<Result> results) {
@@ -88,12 +111,13 @@ public class SearchResponse  implements Serializable {
     }
     SearchResponse searchResponse = (SearchResponse) o;
     return Objects.equals(this.totalPages, searchResponse.totalPages) &&
+        Objects.equals(this.query, searchResponse.query) &&
         Objects.equals(this.results, searchResponse.results);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(totalPages, results);
+    return Objects.hash(totalPages, query, results);
   }
 
   @Override
@@ -102,6 +126,7 @@ public class SearchResponse  implements Serializable {
     sb.append("class SearchResponse {\n");
     
     sb.append("    totalPages: ").append(toIndentedString(totalPages)).append("\n");
+    sb.append("    query: ").append(toIndentedString(query)).append("\n");
     sb.append("    results: ").append(toIndentedString(results)).append("\n");
     sb.append("}");
     return sb.toString();
