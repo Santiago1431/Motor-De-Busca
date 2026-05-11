@@ -146,6 +146,15 @@
     color: var(--text-secondary);
 }
 
+.links-results .description em {
+    font-style: italic;
+    font-weight: 700;
+    color: var(--accent-primary);
+    background: rgba(139, 92, 246, 0.15);
+    padding: 0 4px;
+    border-radius: 4px;
+}
+
 .formulas-container {
     display: flex;
     flex-wrap: wrap;

@@ -65,33 +65,57 @@ public class EsClient {
         int pageSize = 10;
         int from = ((page != null ? page : 1) - 1) * pageSize;
 
-        Query multiMatchQuery = Query.of(q -> q
+        boolean isQuoted = query.startsWith("\"") && query.endsWith("\"");
+        String processedQuery = isQuoted ? query.substring(1, query.length() - 1) : query;
+
+        Query esQuery = Query.of(q -> q
                 .bool(b -> {
-                    b.must(m -> m
+                    // 1. Keyword Match (Base relevance)
+                    b.should(s -> s
                         .multiMatch(mm -> mm
-                            .fields("formulas_latex", "content")
-                            .query(query)
-                            .boost(30f)
+                            .fields("formulas_latex", "content", "title")
+                            .query(processedQuery)
+                            .boost(1.0f)
                         )
                     );
 
+                    // 2. Phrase Match in Title (High boost)
+                    b.should(s -> s
+                        .matchPhrase(mp -> mp
+                            .field("title")
+                            .query(processedQuery)
+                            .boost(100.0f)
+                            .slop(2) // Allow some flexibility
+                        )
+                    );
+
+                    // 3. Phrase Match in Content/Resumo (Medium boost)
+                    b.should(s -> s
+                        .matchPhrase(mp -> mp
+                            .field("content")
+                            .query(processedQuery)
+                            .boost(50.0f)
+                            .slop(3)
+                        )
+                    );
+
+                    // 4. Boost results with identified formula name from LLM
                     if (identifiedName != null && !identifiedName.trim().isEmpty()) {
                         b.should(s -> s
                             .match(ma -> ma
                                 .field("title")
                                 .query(identifiedName)
-                                .operator(Operator.And) // Exige todas as palavras no título
-                                .boost(100f)
-                            )
-                        );
-                        b.should(s -> s
-                            .match(ma -> ma
-                                .field("content")
-                                .query(identifiedName)
-                                .boost(50f)
+                                .operator(Operator.And)
+                                .boost(150.0f)
                             )
                         );
                     }
+
+                    // If quoted, force phrase match (must instead of should)
+                    if (isQuoted) {
+                        b.minimumShouldMatch("100%"); // Effectively turns should into must for phrases
+                    }
+
                     return b;
                 })
         );
@@ -102,11 +126,17 @@ public class EsClient {
                     .index("wikipedia")
                     .from(from)
                     .size(pageSize)
-                    .query(multiMatchQuery)
-                    .collapse(c -> c.field("url.keyword")), // Agrupa por url para evitar duplicatas
+                    .query(esQuery)
+                    .highlight(h -> h
+                        .fields("content", f -> f
+                            .preTags("<em>")
+                            .postTags("</em>")
+                        )
+                    )
+                    .collapse(c -> c.field("url.keyword")),
                 ObjectNode.class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Elasticsearch search failed", e);
         }
 
         return response;

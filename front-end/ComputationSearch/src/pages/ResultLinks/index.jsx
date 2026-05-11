@@ -113,20 +113,43 @@ function ResultLinks() {
         return str.includes('\\') || str.includes('_') || str.includes('^') || str.includes('{') || str.includes('$');
     };
 
+    const SafeMath = ({ math, block }) => {
+        try {
+            return block ? <BlockMath math={math} /> : <InlineMath math={math} />;
+        } catch (e) {
+            console.error("LaTeX rendering error:", e);
+            return <span>${math}$</span>; // Fallback to raw text
+        }
+    };
+
     const LatexRenderer = ({ text }) => {
         if (!text) return null;
         
-        // Split text by $...$ delimiters
-        const parts = text.split(/(\$.*?\$)/g);
+        // Split text by common LaTeX delimiters: $...$, \(...\), \[...\]
+        const parts = text.split(/(\$.*?\$|\\\(.*?\\\)|\\\[.*?\\\])/g);
         
         return (
             <span>
                 {parts.map((part, index) => {
-                    if (part.startsWith('$') && part.endsWith('$')) {
-                        const math = part.slice(1, -1);
-                        return <InlineMath key={index} math={math} />;
+                    const trimmedPart = part.trim();
+                    // Inline math $...$ or \(...\)
+                    if ((trimmedPart.startsWith('$') && trimmedPart.endsWith('$')) || 
+                        (trimmedPart.startsWith('\\(') && trimmedPart.endsWith('\\)'))) {
+                        let math = trimmedPart.startsWith('$') ? trimmedPart.slice(1, -1) : trimmedPart.slice(2, -2);
+                        
+                        // Strip HTML tags from math
+                        math = math.replace(/<[^>]*>/g, '');
+                        
+                        return <SafeMath key={index} math={math} />;
                     }
-                    return <span key={index}>{part}</span>;
+                    // Block math \[...\]
+                    if (trimmedPart.startsWith('\\[') && trimmedPart.endsWith('\\]')) {
+                        let math = trimmedPart.slice(2, -2);
+                        math = math.replace(/<[^>]*>/g, '');
+                        return <SafeMath key={index} math={math} block />;
+                    }
+                    // Regular text (with potential HTML highlights)
+                    return <span key={index} dangerouslySetInnerHTML={{ __html: part }} />;
                 })}
             </span>
         );
